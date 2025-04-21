@@ -58,7 +58,7 @@ create_pca_plot <- function(data, labels, title_prefix, color_values) {
       panel.border = element_rect(color = "black", fill = NA, size = 1)
     )
 }
-setwd("/Users/4477547/Documents/GitHub/Cell-State-Transitions-B-ALL/Data")
+setwd("~/GitHub/Cell-State-Transitions-B-ALL/Data")
 Data <- read.csv("markov.csv")
 # Transpose the data and set the first row as column names
 transposed_data <- as.data.frame(t(Data))
@@ -87,14 +87,18 @@ transposed_data$BCR_new <- sapply(1:nrow(transposed_data), function(i) {
   }
 })
 
-# For DiseaseProgression
-transposed_data$Disease_new <- sapply(transposed_data$"DiseaseProgression", function(x) {
-  if (x == "Relapse") {
-    return(1)
-  } else if (x == "Remission") {
-    return(2)
+# For Relapse based on 3YrRelapse
+transposed_data$Relapse <- sapply(1:nrow(transposed_data), function(i) {
+  if (is.na(transposed_data$"3YrRelapse"[i])) {
+    return(NA)  # Handle NA values
+  } else if (transposed_data$"DiseaseProgression"[i] == "Remission") {
+    return(2)  # Remission group
+  } else if (grepl("Yes", transposed_data$"3YrRelapse"[i], fixed = TRUE)) {
+    return(1)  # Yes to 3YrRelapse
+  } else if (grepl("No", transposed_data$"3YrRelapse"[i], fixed = TRUE)) {
+    return(0)  # No to 3YrRelapse
   } else {
-    return(0)
+    return(NA)  # Handle any other cases
   }
 })
 
@@ -107,8 +111,7 @@ bcr_data[] <- lapply(bcr_data, function(x) as.numeric(as.character(x)))
 mrd_data <- transposed_data[, c(m_columns, "MRD_new")]
 mrd_data[] <- lapply(mrd_data, function(x) as.numeric(as.character(x)))
 
-relapse_data <- transposed_data[, c(m_columns, "Disease_new")]
-relapse_data[] <- lapply(relapse_data, function(x) as.numeric(as.character(x)))
+
 
 # Create plots with new labels
 bcr_plot <- create_pca_plot(bcr_data[,1:16], transposed_data$BCR_new, "BCRABL",
@@ -123,7 +126,12 @@ mrd_plot <- create_pca_plot(mrd_data[,1:16], transposed_data$MRD_new, "MRD",
                               "Remission" = "gray"))
 print(mrd_plot)
 
-relapse_plot <- create_pca_plot(relapse_data[,1:16], transposed_data$Disease_new, "Relapse",
+# Remove rows with NA values
+transposed_data <- transposed_data[!is.na(transposed_data$Relapse), ]
+relapse_data <- transposed_data[, c(m_columns, "Relapse")]
+relapse_data[] <- lapply(relapse_data, function(x) as.numeric(as.character(x)))
+
+relapse_plot <- create_pca_plot(relapse_data[,1:16], transposed_data$Relapse, "Relapse",
                                 c("RelapseNegative" = "#bc4749",
                                   "RelapsePositive" = "#386641",
                                   "Remission" = "gray"))
