@@ -1,19 +1,13 @@
 clc;clear;close all;
-
-MRDpositivecolor = [227,206,169]/255;
-MRDnegativecolor = [154,185,186]/255;
-% colors = [123,78,155;
-%           162,99,169;
-%           219,156,185;
-%           242,221,219]/255;
-% MindicesVIRTUAL = 3:18; % matrix cols
-% MindicesAVG = 2:17; % matrix cols
-% Xindices = 2:5; % matrix cols
-
 MS = 45;
 lw = 2;
 FS = 24;
 
+DIAGNOSIS_COLOR = [70,153,144]/255;
+RELAPSE_COLOR = [61,118,175]/255;
+REMISSION_COLOR = [165,35,211]/255;
+
+colors = [RELAPSE_COLOR;REMISSION_COLOR];
 
 DiseaseProgression2 = {'Relapse','Remission'};
 
@@ -62,12 +56,16 @@ for DP2 = DiseaseProgression2
     
     for i = 1:1:length(diagnosis_indices)
             
-        plot(xvals,diagnosis(:,i),'.','Color',black(),'MarkerSize',MS);
-        plot(xvals+delta,relapse(:,i),'.','Color',black(),'MarkerSize',MS);
-    
         for j = 1:1:length(xvals)
             plot([xvals(j),xvals(j)+delta],[diagnosis(j,i),relapse(j,i)],'-','Color',black(),'LineWidth',lw);
         end
+    end
+    for i = 1:1:length(diagnosis_indices)
+
+        plot(xvals,diagnosis(:,i),'.','Color',DIAGNOSIS_COLOR,'MarkerSize',MS);
+        plot(xvals+delta,relapse(:,i),'.','Color',colors(f,:),'MarkerSize',MS);
+    
+        
     end
     
     Xlabels={'M_{11}','M_{12}','M_{13}','M_{14}','M_{21}','M_{22}','M_{23}','M_{24}','M_{31}','M_{32}','M_{33}','M_{34}','M_{41}','M_{42}','M_{43}','M_{44}'};
