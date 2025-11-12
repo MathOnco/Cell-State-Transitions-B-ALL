@@ -40,10 +40,10 @@ figure(4);
 sorted = matrix(:, find(strcmp(DP, 'Remission') & strcmp(S, 'BM')));
 violinplot(sorted',Xlabels,'bandwidth',0.1,'ViolinColor',colors, 'DataStyle', 'scatter', 'ShowNotches', false, 'ViolinAlpha',0.5, 'QuartileStyle','boxplot'); ylim([0 1]); 
 
-printPNG(figure(1),'../plot/1E.png')
-printPNG(figure(2),'../plot/1F.png')
-printPNG(figure(3),'../plot/1G.png')
-printPNG(figure(4),'../plot/1H.png')
+printPNG(figure(1),'../plot/2E.png')
+printPNG(figure(2),'../plot/2F.png')
+printPNG(figure(3),'../plot/2G.png')
+printPNG(figure(4),'../plot/2H.png')
 
 
 
