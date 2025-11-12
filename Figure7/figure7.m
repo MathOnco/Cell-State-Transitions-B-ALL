@@ -2,7 +2,7 @@ clear; clc; close all;
 
 % ---------------------- Paths & options ----------------------
 % Update this path if needed:
-csv_file  = "markov_clinical.csv";
+csv_file  = "Data/markov.csv";
 
 dt     = 1;
 p0_3   = [0.25; 0.25];  % initial for early overlays
